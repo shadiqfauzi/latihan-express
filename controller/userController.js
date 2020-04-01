@@ -59,12 +59,12 @@ module.exports = {
         let find = data.find(val => val.username === user)
         if(find){
             if(find.password === pass){
-                res.send('Welcome!')
+                res.status(200).send('<h1>Welcome!</h1>')
             }else{
-                res.send('Wrong Password')
+                res.status(200).send('<h1>Wrong Password</h1>')
             }
         }else{
-            res.send('Username not found')
+            res.status(404).send('<h1>Username not found</h1>')
         }
     },
     searchByRole : (req, res) => {
