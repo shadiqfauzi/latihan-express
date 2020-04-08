@@ -1,3 +1,5 @@
+const db = require('../database')
+
 let data = [
     {
         id: 1,
@@ -74,5 +76,58 @@ module.exports = {
         }else{
             res.status(404).send('<h1>Not Found</h1>')
         }
+    },
+    LoginSql: (req, res) => {
+        const { username, password } = req.body
+        let sql = `select * from users where username = '${username}' and password = '${password}'`
+        db.query(sql, (err, results) => {
+            if(err){
+                res.status(500).send(err.message)
+            }else{
+                if(results.length !== 0){
+                    res.status(200).send({
+                        status: 'logged in',
+                        message: 'Silahkan masuk brow'
+                    })
+                }else{
+                    res.status(404).send({
+                        status: 'Not Found',
+                        message: 'Username not found'
+                    })
+                }
+            }
+        })
+    },
+    RegisterSql : (req, res) => {
+        // const { username, password } = req.body
+        let sql = `insert into users set ?`
+        // eval(require('locus'))
+        db.query(sql, req.body, (err, results) => {
+            if(err){
+                if(err.errno === 1062){
+                    return res.status(500).send({
+                        status: 'Failed',
+                        message: 'Username already exists'
+                    })
+                }
+                res.status(500).send(err)
+            }else{
+                let sql = `select * from users where id = ${results.insertId}`
+                db.query(sql, (err, results) => {
+                    if(err){
+                        res.status(500).send(err.message)
+                    }else{
+                        if(results.length !== 0){
+                            res.status(200).send(results[0])
+                        }else{
+                            res.status(404).send({
+                                status: 'Not Found',
+                                message: 'Username not found'
+                            })
+                        }
+                    }
+                })
+            }
+        })
     }
 }

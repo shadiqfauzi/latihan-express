@@ -8,5 +8,7 @@ router.get('/getUserById/:id', userController.getUserById)
 router.get('/search-name', userController.searchByUsername)
 router.get('/login', userController.login)
 router.get('/search-by-role', userController.searchByRole)
+router.post('/login-sql', userController.LoginSql)
+router.post('/register-sql', userController.RegisterSql)
 
 module.exports = router
